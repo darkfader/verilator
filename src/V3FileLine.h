@@ -74,6 +74,9 @@ class FileLine {
     int		m_filenameno;
     bitset<V3ErrorCode::_ENUM_MAX>	m_warnOn;
 
+public:
+    static set<int> m_igndef_lines; // by Kris, to record preproc error lines
+
 private:
     struct EmptySecret {};
     inline static FileLineSingleton& singleton() {

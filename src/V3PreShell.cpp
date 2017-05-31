@@ -114,7 +114,7 @@ protected:
     }
 
     void preprocInclude (FileLine* fl, const string& modname) {
-    fl->v3warn(IGNINC, "Ignore include fie: "<<modname); // for --lint-only by Kris
+    fl->v3warn(IGNINC, "Ignore include file: "<<modname); // for --lint-only by Kris
 	/*if (modname[0]=='/' || modname[0]=='\\') {
 	    fl->v3warn(INCABSPATH,"Suggest `include with absolute path be made relative, and use +include: "<<modname);
 	}

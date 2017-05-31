@@ -109,6 +109,7 @@ public:
 	WIDTHCONCAT,	// Unsized numbers/parameters in concatenations
 	IGNINC,		// Ignore include file for --lint-only (by Kris)
 	IGNMOD,		// Ignore module for --lint-only (by Kris)
+	IGNDEF,		// Ignore define for --lint-only (by Kris)
 	_ENUM_MAX
 	// ***Add new elements below also***
     };
@@ -143,7 +144,7 @@ public:
 	    "SELRANGE", "STMTDLY", "SYMRSVDWORD", "SYNCASYNCNET",
 	    "UNDRIVEN", "UNOPT", "UNOPTFLAT", "UNPACKED", "UNSIGNED", "UNUSED",
 	    "USERERROR", "USERFATAL", "USERINFO", "USERWARN",
-	    "VARHIDDEN", "WIDTH", "WIDTHCONCAT", "IGNINC", "IGNMOD",
+	    "VARHIDDEN", "WIDTH", "WIDTHCONCAT", "IGNINC", "IGNMOD", "IGNDEF",
 	    " MAX"
 	};
 	return names[m_e];

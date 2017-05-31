@@ -32,6 +32,10 @@
 extern void yyerror(const char*);
 extern void yyerrorf(const char* format, ...);
 
+// by Kris
+extern void yywarn(const char*);
+extern void yywarnf(const char* format, ...);
+
 #define STATE_VERILOG_RECENT  S17  // State name for most recent Verilog Version
 
 #define PARSEP V3ParseImp::parsep()
@@ -142,6 +146,25 @@ void yyerrorf(const char* format, ...) {
     va_end(ap);
 
     yyerror(msg);
+}
+
+// by Kris
+void yywarn(const char* errmsg) {
+    PARSEP->fileline()->v3warn(IGNDEF, errmsg);
+    FileLine::m_igndef_lines.insert(PARSEP->fileline()->lineno()); // record line number
+}
+
+void yywarnf(const char* format, ...) {
+    const int maxlen = 2000;
+    char msg[maxlen];
+
+    va_list ap;
+    va_start(ap,format);
+    VL_VSNPRINTF(msg,maxlen,format,ap);
+    msg[maxlen-1] = '\0';
+    va_end(ap);
+
+    yywarn(msg);
 }
 
 /**********************************************************************/
@@ -1008,7 +1031,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   /* Default rules - leave last */
 
 <V95,V01,V05,VA5,S05,S09,S12,S17,SAX,VLT>{
-  "`"[a-zA-Z_0-9]+	{ FL; yyerrorf("Define or directive not defined: %s",yytext); }
+  "`"[a-zA-Z_0-9]+	{ FL; yywarnf("Define or directive not defined: %s",yytext); } /* error->warn by Kris */
   "//"[^\n]*		{ }  /* throw away single line comments */
   .			{ FL; return yytext[0]; }	/* return single char ops. */
 }
