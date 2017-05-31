@@ -542,7 +542,7 @@ private:
 	    // Note width() not set on range; use elementsConst()
 	    if (nodep->littleEndian() && !nodep->backp()->castUnpackArrayDType()
 		&& !nodep->backp()->castCell()) {  // For cells we warn in V3Inst
-		nodep->v3warn(LITENDIAN,"Little bit endian vector: MSB < LSB of bit range: "<<nodep->lsbConst()<<":"<<nodep->msbConst());
+        nodep->v3warn(LITENDIAN,"Little bit endian vector: MSB < LSB of bit range: "<<nodep->lsbConst()<<":"<<nodep->msbConst());
 	    }
 	}
     }
@@ -2333,7 +2333,7 @@ private:
 		// We've resolved parameters and hit a module that we couldn't resolve.  It's
 		// finally time to report it.
 		// Note only here in V3Width as this is first visitor after V3Dead.
-        nodep->v3warn(IGNMOD, "Cannot find file containing module: "<<nodep->modName());
+        nodep->v3warn(IGNMOD, "Ignore module: "<<nodep->modName()); // by Kris, for --lint-only
 		/*nodep->v3error("Cannot find file containing module: "<<nodep->modName());
 		v3Global.opt.filePathLookedMsg(nodep->fileline(), nodep->modName());*/
 	    }
