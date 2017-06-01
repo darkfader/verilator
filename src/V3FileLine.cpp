@@ -242,12 +242,14 @@ void FileLine::modifyStateInherit(const FileLine* fromp) {
 void FileLine::v3errorEnd(ostringstream& str) {
     if (m_lineno) {
 	ostringstream nsstr;
-    if (m_igndef_lines.find(m_lineno) != m_igndef_lines.end()) { // by Kris, to indicate the same line as preproc error
-    string _str = str.str();
-    _str.insert(0, "[IGNDEF] ");
-    nsstr<<this<<_str;
-    } else
-	nsstr<<this<<str.str();
+    // by Kris, to indicate the same line as preproc error's
+    if (v3Global.opt.lintOnly()) {
+        if (m_igndef_lines.find(m_lineno) != m_igndef_lines.end()) {
+            string _str = str.str();
+            _str.insert(0, "[IGNDEF] ");
+            nsstr<<this<<_str;
+        } else nsstr<<this<<str.str();
+    } else nsstr<<this<<str.str();
 	if (warnIsOff(V3Error::errorCode())) V3Error::suppressThisWarning();
 	V3Error::v3errorEnd(nsstr);
     } else {

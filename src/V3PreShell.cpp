@@ -114,11 +114,15 @@ protected:
     }
 
     void preprocInclude (FileLine* fl, const string& modname) {
-    fl->v3warn(IGNINC, "Ignore include file: "<<modname); // for --lint-only by Kris
-	/*if (modname[0]=='/' || modname[0]=='\\') {
-	    fl->v3warn(INCABSPATH,"Suggest `include with absolute path be made relative, and use +include: "<<modname);
-	}
-	preprocOpen(fl, s_filterp, modname, V3Os::filenameDir(fl->filename()), "Cannot find include file: ");*/
+        // by Kris
+        if (v3Global.opt.lintOnly()) {
+            fl->v3warn(IGNINC, "Ignore include file: "<<modname);
+        } else {
+        	if (modname[0]=='/' || modname[0]=='\\') {
+        	    fl->v3warn(INCABSPATH,"Suggest `include with absolute path be made relative, and use +include: "<<modname);
+        	}
+        	preprocOpen(fl, s_filterp, modname, V3Os::filenameDir(fl->filename()), "Cannot find include file: ");
+        }
     }
 
     bool preprocOpen (FileLine* fl, V3InFilter* filterp, const string& modname, const string& lastpath,
