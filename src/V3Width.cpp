@@ -2333,9 +2333,13 @@ private:
 		// We've resolved parameters and hit a module that we couldn't resolve.  It's
 		// finally time to report it.
 		// Note only here in V3Width as this is first visitor after V3Dead.
-        nodep->v3warn(IGNMOD, "Ignore module: "<<nodep->modName()); // by Kris, for --lint-only
-		/*nodep->v3error("Cannot find file containing module: "<<nodep->modName());
-		v3Global.opt.filePathLookedMsg(nodep->fileline(), nodep->modName());*/
+            // by Kris
+            if (v3Global.opt.lintOnly()) {
+                nodep->v3warn(IGNMOD, "Ignore module: "<<nodep->modName());
+            } else {
+                nodep->v3error("Cannot find file containing module: "<<nodep->modName());
+                v3Global.opt.filePathLookedMsg(nodep->fileline(), nodep->modName());
+            }
 	    }
 	    if (nodep->rangep()) {
 		m_cellRangep = nodep->rangep();

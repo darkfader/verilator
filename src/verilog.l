@@ -1031,7 +1031,7 @@ vnum	{vnum1}|{vnum2}|{vnum3}|{vnum4}|{vnum5}
   /* Default rules - leave last */
 
 <V95,V01,V05,VA5,S05,S09,S12,S17,SAX,VLT>{
-  "`"[a-zA-Z_0-9]+	{ FL; yywarnf("Define or directive not defined: %s",yytext); } /* error->warn by Kris */
+  "`"[a-zA-Z_0-9]+	{ FL; if (v3Global.opt.lintOnly()) yywarnf("Define or directive not defined: %s",yytext); else yyerrorf("Define or directive not defined: %s",yytext); } /* error->warn by Kris */
   "//"[^\n]*		{ }  /* throw away single line comments */
   .			{ FL; return yytext[0]; }	/* return single char ops. */
 }

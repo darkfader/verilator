@@ -75,7 +75,9 @@ class FileLine {
     bitset<V3ErrorCode::_ENUM_MAX>	m_warnOn;
 
 public:
-    static set<int> m_igndef_lines; // by Kris, to record preproc error lines
+    // by Kris,
+    static set<int> m_igndef_lines; // to record preproc error lines
+    bool   m_dont_preproc; // to ignore submodule file
 
 private:
     struct EmptySecret {};
