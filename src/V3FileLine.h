@@ -76,8 +76,9 @@ class FileLine {
 
 public:
     // by Kris,
-    static set<int> m_igndef_lines; // to record preproc error lines
-    bool   m_dont_preproc; // to ignore submodule file
+    static set<int>    m_igndef;    // to record preproc error lines
+    static bool        m_ignmod;    // to ignore submodule file
+    static set<string> m_ignunused; // to ignore unused warnings
 
 private:
     struct EmptySecret {};

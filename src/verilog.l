@@ -151,7 +151,7 @@ void yyerrorf(const char* format, ...) {
 // by Kris
 void yywarn(const char* errmsg) {
     PARSEP->fileline()->v3warn(IGNDEF, errmsg);
-    FileLine::m_igndef_lines.insert(PARSEP->fileline()->lineno()); // record line number
+    FileLine::m_igndef.insert(PARSEP->fileline()->lineno()); // record line number
 }
 
 void yywarnf(const char* format, ...) {

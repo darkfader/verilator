@@ -275,6 +275,13 @@ private:
 
     // VISITORS
     virtual void visit(AstVar* nodep) {
+
+    	bool pass = false; // by Kris
+    	if (v3Global.opt.lintOnly() && FileLine::m_ignunused.find(nodep->name()) != FileLine::m_ignunused.end()) {
+    		nodep->v3warn(IGNUNUSED, "Signal is unused. it is connected to NOTFOUNDMODULE: "<<nodep->prettyName());
+    		pass = true;
+    	}
+
 	for (int usr=1; usr<(m_alwaysp?3:2); ++usr) {
 	    // For assigns and non-combo always, do just usr==1, to look for module-wide undriven etc
 	    // For non-combo always, run both usr==1 for above, and also usr==2 for always-only checks
@@ -289,6 +296,10 @@ private:
 		|| nodep->isSigUserRdPublic()
 		|| (m_taskp && (m_taskp->dpiImport() || m_taskp->dpiExport()))) {
 		entryp->usedWhole();
+	    }
+	    if (pass) { // by Kris
+	    	entryp->drivenWhole();
+	    	entryp->usedWhole();
 	    }
 	}
 	// Discover variables used in bit definitions, etc

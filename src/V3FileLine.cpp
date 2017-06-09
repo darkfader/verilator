@@ -34,7 +34,10 @@
 # include "V3Config.h"
 #endif
 
-set<int> FileLine::m_igndef_lines; // by Kris
+// by Kris
+set<int> FileLine::m_igndef;
+bool FileLine::m_ignmod;
+set<string> FileLine::m_ignunused;
 
 //######################################################################
 // FileLineSingleton class functions
@@ -244,7 +247,7 @@ void FileLine::v3errorEnd(ostringstream& str) {
 	ostringstream nsstr;
     // by Kris, to indicate the same line as preproc error's
     if (v3Global.opt.lintOnly()) {
-        if (m_igndef_lines.find(m_lineno) != m_igndef_lines.end()) {
+        if (m_igndef.find(m_lineno) != m_igndef.end()) {
             string _str = str.str();
             _str.insert(0, "[IGNDEF] ");
             nsstr<<this<<_str;
