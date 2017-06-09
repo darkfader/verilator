@@ -142,7 +142,7 @@ private:
 	    // We'll throw the error when we know the module will really be needed.
 	    string prettyName = AstNode::prettyName(modName);
 	    V3Parse parser (v3Global.rootp(), m_filterp, m_parseSymp);
-	    if (v3Global.opt.lintOnly()) nodep->fileline()->m_dont_preproc = true; // by Kris
+	    if (v3Global.opt.lintOnly()) nodep->fileline()->m_ignmod = true; // by Kris
 	    parser.parseFile(nodep->fileline(), prettyName, false, "");
 	    V3Error::abortIfErrors();
 	    // We've read new modules, grab new pointers to their names

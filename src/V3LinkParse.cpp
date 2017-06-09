@@ -411,6 +411,38 @@ private:
 	visitIterateNoValueMod(nodep);
     }
 
+    // by Kris, to prevent unused warnings for connected signals
+    virtual void visit(AstParseRef* nodep) {
+    	if (v3Global.opt.lintOnly()) {
+    		AstNode* pin;
+    		bool ispin = false;
+    		if (nodep->backp()->type() == AstType::atPin) {
+    			ispin = true;
+    			pin = nodep->backp();
+    		}
+    		else if (nodep->backp()->type() == AstType::atSelBit)
+    		if (nodep->backp()->backp()->type() == AstType::atPin) {
+    			ispin = true;
+    			pin = nodep->backp()->backp();
+    		}
+    		if (ispin) {
+    			AstNode* niterp;
+    			niterp = pin;
+    			while(niterp) {
+    				if (niterp->type() == AstType::atCell && ((AstCell*) niterp)->modp()->type() == AstType::atNotFoundModule) {
+    					FileLine::m_ignunused.insert(nodep->name());
+    					niterp = NULL;
+    				}
+    				else if (niterp->type() == AstType::atModule) niterp = NULL;
+    				else niterp = niterp->backp();
+    			}
+    		}
+    	}
+	// Default: Just iterate
+	cleanFileline(nodep);
+	nodep->iterateChildren(*this);
+    }
+
     virtual void visit(AstNode* nodep) {
 	// Default: Just iterate
 	cleanFileline(nodep);

@@ -112,8 +112,8 @@ void V3ParseImp::parseFile(FileLine* fileline, const string& modfilename, bool i
     // Preprocess into m_ppBuffer
     // by Kris
     bool ok;
-    if (v3Global.opt.lintOnly() && fileline->m_dont_preproc) {
-        ok = false; fileline->m_dont_preproc = false;
+    if (v3Global.opt.lintOnly() && fileline->m_ignmod) {
+        ok = false; fileline->m_ignmod = false;
     } else {
         ok = V3PreShell::preproc(fileline, modfilename, m_filterp, this, errmsg);
     }
