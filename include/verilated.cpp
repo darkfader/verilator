@@ -1393,7 +1393,7 @@ void VL_READMEM_N(
             else if (c=='_') {}
             else if (c=='@') { reading_addr = true; innum=false; needinc=false; }
             // Check for hex or binary digits as file format requests
-            else if (isxdigit(c) || (!reading_addr && (c=='x' || c=='X'))) {
+            else if (hex && (isxdigit(c) || (!reading_addr && (c=='x' || c=='X')))) {
                 c = tolower(c);
                 int value = (c >= 'a' ? (c=='x' ? VL_RAND_RESET_I(4) : (c-'a'+10)) : (c-'0'));
                 if (!innum) {  // Prep for next number
@@ -1444,8 +1444,47 @@ void VL_READMEM_N(
                     }
                 }
                 innum = true;
-            }
-            else {
+
+            } else if (!hex) {
+
+                int value = c;
+                printf(" Value width=%d  @%x = %c\n", width, addr, c);
+                if (VL_UNLIKELY(addr >= static_cast<IData>(depth+array_lsb)
+                                || addr < static_cast<IData>(array_lsb))) {
+                    VL_FATAL_MT (ofilenamep.c_str(), linenum, "",
+                                 "$readmem file address beyond bounds of array");
+                } else {
+                    int entry = addr - array_lsb;
+                    QData shift = VL_ULL(1);
+                    // Shift value in
+                    if (width<=8) {
+                        CData* datap = &(reinterpret_cast<CData*>(memp))[entry];
+                        if (!innum) { *datap = 0; }
+                        *datap = ((*datap << shift) + value) & VL_MASK_I(width);
+                    } else if (width<=16) {
+                        SData* datap = &(reinterpret_cast<SData*>(memp))[entry];
+                        if (!innum) { *datap = 0; }
+                        *datap = ((*datap << shift) + value) & VL_MASK_I(width);
+                    } else if (width<=VL_WORDSIZE) {
+                        IData* datap = &(reinterpret_cast<IData*>(memp))[entry];
+                        if (!innum) { *datap = 0; }
+                        *datap = ((*datap << shift) + value) & VL_MASK_I(width);
+                    } else if (width<=VL_QUADSIZE) {
+                        QData* datap = &(reinterpret_cast<QData*>(memp))[entry];
+                        if (!innum) { *datap = 0; }
+                        *datap = ((*datap << static_cast<QData>(shift))
+                                  + static_cast<QData>(value)) & VL_MASK_Q(width);
+                    } else {
+                        WDataOutP datap = &(reinterpret_cast<WDataOutP>(memp))[ entry*VL_WORDS_I(width) ];
+                        if (!innum) { VL_ZERO_RESET_W(width, datap); }
+                        _VL_SHIFTL_INPLACE_W(width, datap, static_cast<IData>(shift));
+                        datap[0] |= value;
+                    }
+
+                    addr++;
+                }
+
+            } else {
                 VL_FATAL_MT (ofilenamep.c_str(), linenum, "", "$readmem file syntax error");
             }
         }
