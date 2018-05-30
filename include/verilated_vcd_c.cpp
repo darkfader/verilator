@@ -412,15 +412,14 @@ double VerilatedVcd::timescaleToDouble (const char* unitp) {
 }
 
 std::string VerilatedVcd::doubleToTimescale (double value) {
-    const char* suffixp = "s";
-    if	    (value>=1e0)   { suffixp="s"; value *= 1e0; }
-    else if (value>=1e-3 ) { suffixp="ms"; value *= 1e3; }
-    else if (value>=1e-6 ) { suffixp="us"; value *= 1e6; }
-    else if (value>=1e-9 ) { suffixp="ns"; value *= 1e9; }
-    else if (value>=1e-12) { suffixp="ps"; value *= 1e12; }
-    else if (value>=1e-15) { suffixp="fs"; value *= 1e15; }
-    else if (value>=1e-18) { suffixp="as"; value *= 1e18; }
-    char valuestr[100]; sprintf(valuestr,"%3.0f%s", value, suffixp);
+    const char* suffixp = "ms";
+    if      (value>=1e0)   { suffixp="ms"; value *= 1e0; }
+    else if (value>=1e-3 ) { suffixp="us"; value *= 1e3; }
+    else if (value>=1e-6 ) { suffixp="ns"; value *= 1e6; }
+    else if (value>=1e-9 ) { suffixp="ps"; value *= 1e9; }
+    else if (value>=1e-12) { suffixp="fs"; value *= 1e12; }
+    else if (value>=1e-15) { suffixp="as"; value *= 1e15; }
+    char valuestr[100]; sprintf(valuestr,"%3.0f%s", value * 1000, suffixp);
     return valuestr;  // Gets converted to string, so no ref to stack
 }
 
